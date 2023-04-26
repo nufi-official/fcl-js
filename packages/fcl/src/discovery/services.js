@@ -6,6 +6,7 @@ import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
 
 export async function getServices({types}) {
+  console.log('getServices', types)
   const endpoint = await config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
@@ -15,7 +16,7 @@ export async function getServices({types}) {
   const include = await config.get("discovery.authn.include", [])
   const url = new URL(endpoint)
 
-  return fetch(url, {
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,4 +31,6 @@ export async function getServices({types}) {
       network: await getChainId(),
     }),
   }).then(d => d.json())
+  console.log('getServices', response)
+  return response
 }
